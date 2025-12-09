@@ -5,11 +5,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import useForm from '@/hooks/useForm';
 import { format } from 'date-fns';
-import { Calendar, Clock, User } from 'lucide-react';
+import { es } from 'date-fns/locale/es';
+import { Save } from 'lucide-react';
 import { useImperativeHandle, useState } from 'react';
 import { type Event } from 'react-big-calendar';
+import DatePicker, { registerLocale } from 'react-datepicker';
 
+import 'react-datepicker/dist/react-datepicker.css';
 // Add this before the EventModal component
 export type EventModalRef = {
   open: () => void;
@@ -22,6 +27,8 @@ type EventModalProps = {
   onOpenChange?: (open: boolean) => void;
   ref?: React.Ref<EventModalRef>;
 };
+
+registerLocale('es', es);
 
 const formatDate = (date: Date | undefined) => {
   if (!date) return '';
@@ -43,6 +50,13 @@ const isSameDay = (start: Date | undefined, end: Date | undefined) => {
 
 const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
   const [openState, setOpenState] = useState(open);
+  const { formValues, onChange, onSubmit } = useForm({
+    title: event?.title || '',
+    notes: '',
+    start: event?.start || new Date(),
+    end: event?.end || new Date(),
+  });
+
   const isForwardedRef = !!ref;
   const finalOpen = isForwardedRef ? openState : open;
 
@@ -52,6 +66,8 @@ const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
     } else if (onOpenChange) {
       onOpenChange(isOpen);
     }
+
+    //TODO: reset form values when closing the modal
   };
 
   useImperativeHandle(ref, () => ({
@@ -59,68 +75,93 @@ const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
     close: () => handleOpenChange(false),
   }));
 
+  const handleSubmit = (event: typeof formValues) => {
+    const areDatesValid = event.start < event.end;
+    if (!areDatesValid) {
+      alert('La fecha de fin debe ser mayor a la fecha de inicio');
+      return;
+    }
+    handleOpenChange(false);
+  };
+
   if (!event) return null;
 
   return (
     <Dialog open={finalOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">{event.title}</DialogTitle>
+          <DialogTitle className="text-2xl">Nuevo evento</DialogTitle>
           <DialogDescription>Event details and information</DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-          {/* Date and Time Section */}
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <Calendar className="h-5 w-5 mt-0.5 text-muted-foreground" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Date</p>
-                {isSameDay(event.start, event.end) ? (
-                  <p className="text-sm text-muted-foreground">
-                    {formatDate(event.start)}
-                  </p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    {formatDate(event.start)} - {formatDate(event.end)}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <Clock className="h-5 w-5 mt-0.5 text-muted-foreground" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Time</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatTime(event.start)} - {formatTime(event.end)}
-                </p>
-              </div>
-            </div>
-
-            {event.user && (
-              <div className="flex items-start gap-3">
-                <User className="h-5 w-5 mt-0.5 text-muted-foreground" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Organizer</p>
-                  <p className="text-sm text-muted-foreground">
-                    {event.user.name}
-                  </p>
-                </div>
-              </div>
-            )}
+        <form onSubmit={onSubmit(handleSubmit)}>
+          <div className="flex flex-col gap-1 mb-2">
+            <label>Fecha y hora inicio</label>
+            <DatePicker
+              selected={formValues.start}
+              onChange={(e) => onChange('start', e)()}
+              className="form-control"
+              tabIndex={-1}
+              showTimeSelect
+              dateFormat="Pp"
+              locale="es"
+            />
           </div>
 
-          {/* Color Indicator */}
-          {event.bgColor && (
-            <div className="flex items-center gap-3 pt-2">
-              <div
-                className="h-6 w-6 rounded-full border-2 border-border"
-                style={{ backgroundColor: event.bgColor }}
-              />
-              <p className="text-sm text-muted-foreground">Event color</p>
-            </div>
-          )}
-        </div>
+          <div className="flex flex-col gap-1 mb-2">
+            <label>Fecha y hora fin</label>
+            <DatePicker
+              minDate={formValues.start}
+              selected={formValues.end}
+              onChange={(e) => onChange('end', e)()}
+              className="form-control"
+              tabIndex={-1}
+              showTimeSelect
+              dateFormat="Pp"
+              locale="es"
+            />
+          </div>
+
+          <hr />
+          <div>
+            <label>Titulo y notas</label>
+            <Input
+              type="text"
+              className="form-control"
+              placeholder="Título del evento"
+              name="title"
+              autoComplete="off"
+              onChange={onChange('title')}
+              value={formValues.title as string}
+              tabIndex={-1}
+            />
+
+            <small id="emailHelp">Una descripción corta</small>
+          </div>
+
+          <div>
+            <textarea
+              className="form-control"
+              placeholder="Notas"
+              rows={5}
+              name="notes"
+              onChange={onChange('notes')}
+              value={formValues.notes}
+              tabIndex={-1}
+            />
+            <small id="emailHelp" className="font-rubik text-muted">
+              Información adicional
+            </small>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-outline-primary btn-block"
+            tabIndex={-1}
+          >
+            <Save />
+            <span> Guardar</span>
+          </button>
+        </form>
       </DialogContent>
     </Dialog>
   );

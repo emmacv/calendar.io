@@ -13,7 +13,9 @@ import { Save } from 'lucide-react';
 import { useImperativeHandle, useState } from 'react';
 import { type Event } from 'react-big-calendar';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import { toast } from 'sonner';
 
+import { Toaster } from '@/components/ui/sonner';
 import 'react-datepicker/dist/react-datepicker.css';
 // Add this before the EventModal component
 export type EventModalRef = {
@@ -77,93 +79,103 @@ const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
 
   const handleSubmit = (event: typeof formValues) => {
     const areDatesValid = event.start < event.end;
+
     if (!areDatesValid) {
-      alert('La fecha de fin debe ser mayor a la fecha de inicio');
+      toast.error('Evento no válido', {
+        description: 'La fecha de fin debe ser mayor a la fecha de inicio.',
+        position: 'bottom-right',
+      });
+
       return;
     }
+
     handleOpenChange(false);
   };
 
   if (!event) return null;
 
   return (
-    <Dialog open={finalOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">Nuevo evento</DialogTitle>
-          <DialogDescription>Event details and information</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={onSubmit(handleSubmit)}>
-          <div className="flex flex-col gap-1 mb-2">
-            <label>Fecha y hora inicio</label>
-            <DatePicker
-              selected={formValues.start}
-              onChange={(e) => onChange('start', e)()}
-              className="form-control"
+    <>
+      <Dialog open={finalOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Nuevo evento</DialogTitle>
+            <DialogDescription>Event details and information</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={onSubmit(handleSubmit)}>
+            <div className="flex flex-col gap-1 mb-2">
+              <label>Fecha y hora inicio</label>
+              <DatePicker
+                selected={formValues.start}
+                onChange={(e) => onChange('start', e)()}
+                className="form-control"
+                tabIndex={-1}
+                showTimeSelect
+                dateFormat="Pp"
+                locale="es"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 mb-2">
+              <label>Fecha y hora fin</label>
+              <DatePicker
+                minDate={formValues.start}
+                selected={formValues.end}
+                onChange={(e) => onChange('end', e)()}
+                className="form-control"
+                tabIndex={-1}
+                showTimeSelect
+                dateFormat="Pp"
+                locale="es"
+                required
+              />
+            </div>
+
+            <hr />
+            <div>
+              <label>Titulo y notas</label>
+              <Input
+                type="text"
+                className="form-control"
+                placeholder="Título del evento"
+                name="title"
+                autoComplete="off"
+                onChange={onChange('title')}
+                value={formValues.title as string}
+                required
+              />
+
+              <small id="emailHelp">Una descripción corta</small>
+            </div>
+
+            <div>
+              <textarea
+                className="form-control"
+                placeholder="Notas"
+                rows={5}
+                name="notes"
+                onChange={onChange('notes')}
+                value={formValues.notes}
+              />
+              <small id="emailHelp" className="font-rubik text-muted">
+                Información adicional
+              </small>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-outline-primary btn-block"
               tabIndex={-1}
-              showTimeSelect
-              dateFormat="Pp"
-              locale="es"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1 mb-2">
-            <label>Fecha y hora fin</label>
-            <DatePicker
-              minDate={formValues.start}
-              selected={formValues.end}
-              onChange={(e) => onChange('end', e)()}
-              className="form-control"
-              tabIndex={-1}
-              showTimeSelect
-              dateFormat="Pp"
-              locale="es"
-            />
-          </div>
-
-          <hr />
-          <div>
-            <label>Titulo y notas</label>
-            <Input
-              type="text"
-              className="form-control"
-              placeholder="Título del evento"
-              name="title"
-              autoComplete="off"
-              onChange={onChange('title')}
-              value={formValues.title as string}
-              tabIndex={-1}
-            />
-
-            <small id="emailHelp">Una descripción corta</small>
-          </div>
-
-          <div>
-            <textarea
-              className="form-control"
-              placeholder="Notas"
-              rows={5}
-              name="notes"
-              onChange={onChange('notes')}
-              value={formValues.notes}
-              tabIndex={-1}
-            />
-            <small id="emailHelp" className="font-rubik text-muted">
-              Información adicional
-            </small>
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-outline-primary btn-block"
-            tabIndex={-1}
-          >
-            <Save />
-            <span> Guardar</span>
-          </button>
-        </form>
-      </DialogContent>
-    </Dialog>
+            >
+              <Save />
+              <span> Guardar</span>
+            </button>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Toaster position="top-right" toastOptions={{}} />
+    </>
   );
 };
 

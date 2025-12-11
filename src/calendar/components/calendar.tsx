@@ -1,26 +1,14 @@
+import useUiStore from '@/hooks/useUiStore';
 import localizer from '@/lib/localizer';
-import { addHours } from 'date-fns/addHours';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   type Event,
   type View,
   Calendar as MainCalendar,
 } from 'react-big-calendar';
+import useCalendarStore from '../hooks/useCalendarStore';
 import CalendarEvent from './calendar-event';
-import EventModal, { type EventModalRef } from './event-modal';
-
-const events = [
-  {
-    title: 'Cumpleaños de Ana',
-    start: new Date(),
-    end: addHours(new Date(), 5),
-    bgColor: '#32404f',
-    user: {
-      name: 'John Doe',
-      _id: '1',
-    },
-  },
-];
+import EventModal from './event-modal';
 
 const messages = {
   allDay: 'Todo el día',
@@ -52,7 +40,10 @@ const Calendar = () => {
     const lastView = localStorage.getItem('lastView') as View;
     return lastView || 'month';
   });
-  const ref = useRef<EventModalRef>(null);
+  const { events } = useCalendarStore();
+
+  // const ref = useRef<EventModalRef>(null);
+  const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
 
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -62,7 +53,8 @@ const Calendar = () => {
 
   const handleDoubleClickEvent = (event: (typeof events)[0]) => {
     setSelectedEvent(event);
-    ref.current?.open();
+    handleOpenModal();
+    // ref.current?.open();
   };
 
   const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
@@ -93,7 +85,11 @@ const Calendar = () => {
         onSelectSlot={handleSelectSlot}
         selectable
       />
-      <EventModal event={selectedEvent} ref={ref} />
+      <EventModal
+        event={selectedEvent}
+        open={isModalOpen}
+        onOpenChange={handleCloseModal}
+      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import calendarReducer from '@/calendar/store/calendar/slice';
+import calendarReducer from '@/calendar/store/slice';
 import { configureStore } from '@reduxjs/toolkit';
 import uiReducer from './ui/slice';
 

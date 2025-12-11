@@ -9,7 +9,6 @@ type CalendarEvent = {
     _id: string;
     name: string;
   };
-  a: int;
 };
 
 type CalendarState = {

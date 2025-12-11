@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { addHours } from 'date-fns';
+import type { CalendarState } from '../types/calendar';
 
 const events = [
   {
@@ -15,18 +16,20 @@ const events = [
   },
 ];
 
+const initialState: CalendarState = {
+  events,
+  activeEvent: null,
+};
+
 const calendarSlice = createSlice({
   name: 'calendar',
-  initialState: {
-    events,
-    activeEvent: null,
-  },
+  initialState,
   reducers: {
-    setActiveEvent(state, action) {
+    selectEvent(state, action) {
       state.activeEvent = action.payload;
     },
   },
 });
 
-export const { setActiveEvent } = calendarSlice.actions;
+export const { selectEvent } = calendarSlice.actions;
 export default calendarSlice.reducer;

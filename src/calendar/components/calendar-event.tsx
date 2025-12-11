@@ -1,10 +1,11 @@
-import type { EventProps } from "react-big-calendar";
+import type { EventProps } from 'react-big-calendar';
+import type { CalendarEvent } from '../types/calendar';
 
-const CalendarEvent = (props: EventProps) => {
+const CalendarEvent = (props: EventProps<CalendarEvent>) => {
   return (
     <div>
       <strong>
-        {props.title} - {props.event.user.name}
+        {props.title} - {props.event.user?.name}
       </strong>
     </div>
   );

@@ -7,16 +7,15 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import useForm from '@/hooks/useForm';
-import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import { Save } from 'lucide-react';
-import { useImperativeHandle, useState } from 'react';
-import { type Event } from 'react-big-calendar';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { toast } from 'sonner';
 
 import { Toaster } from '@/components/ui/sonner';
+import useUiStore from '@/hooks/useUiStore';
 import 'react-datepicker/dist/react-datepicker.css';
+import type CalendarEvent from './calendar-event';
 // Add this before the EventModal component
 export type EventModalRef = {
   open: () => void;
@@ -24,58 +23,31 @@ export type EventModalRef = {
 };
 
 type EventModalProps = {
-  event: Event | null;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  event?: CalendarEvent | null;
   ref?: React.Ref<EventModalRef>;
 };
 
 registerLocale('es', es);
 
-const formatDate = (date: Date | undefined) => {
-  if (!date) return '';
+const EventModal = ({ event, ref }: EventModalProps) => {
+  const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
 
-  return format(date, 'PPP');
-};
-
-const formatTime = (date: Date | undefined) => {
-  if (!date) return '';
-
-  return format(date, 'p');
-};
-
-const isSameDay = (start: Date | undefined, end: Date | undefined) => {
-  if (!start || !end) return false;
-
-  return format(start, 'yyyy-MM-dd') === format(end, 'yyyy-MM-dd');
-};
-
-const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
-  const [openState, setOpenState] = useState(open);
   const { formValues, onChange, onSubmit } = useForm({
     title: event?.title || '',
-    notes: '',
+    notes: event?.notes || '',
     start: event?.start || new Date(),
     end: event?.end || new Date(),
   });
 
-  const isForwardedRef = !!ref;
-  const finalOpen = isForwardedRef ? openState : open;
-
   const handleOpenChange = (isOpen: boolean) => {
-    if (isForwardedRef) {
-      setOpenState(isOpen);
-    } else if (onOpenChange) {
-      onOpenChange(isOpen);
+    if (isOpen) {
+      handleOpenModal();
+    } else {
+      handleCloseModal();
     }
 
     //TODO: reset form values when closing the modal
   };
-
-  useImperativeHandle(ref, () => ({
-    open: () => handleOpenChange(true),
-    close: () => handleOpenChange(false),
-  }));
 
   const handleSubmit = (event: typeof formValues) => {
     const areDatesValid = event.start < event.end;
@@ -96,7 +68,7 @@ const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
 
   return (
     <>
-      <Dialog open={finalOpen} onOpenChange={handleOpenChange}>
+      <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-2xl">Nuevo evento</DialogTitle>
@@ -174,7 +146,7 @@ const EventModal = ({ event, open, onOpenChange, ref }: EventModalProps) => {
           </form>
         </DialogContent>
       </Dialog>
-      <Toaster position="top-right" toastOptions={{}} />
+      <Toaster position="top-right" />
     </>
   );
 };

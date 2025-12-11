@@ -6,11 +6,11 @@ const useCalendarStore = () => {
   const dispatch = useDispatch();
   const calendarState = useSelector((state: RootState) => state.calendar);
 
-  const handleAddEvent = (event: CalendarEvent) => {
-    dispatch({ type: 'calendar/addEvent', payload: event });
+  const handleSelectEvent = (event: CalendarEvent) => {
+    dispatch({ type: 'calendar/selectEvent', payload: event });
   };
 
-  return { ...calendarState, handleAddEvent };
+  return { ...calendarState, handleSelectEvent };
 };
 
 export default useCalendarStore;

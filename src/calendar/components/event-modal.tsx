@@ -24,12 +24,11 @@ export type EventModalRef = {
 
 type EventModalProps = {
   event?: CalendarEvent | null;
-  ref?: React.Ref<EventModalRef>;
 };
 
 registerLocale('es', es);
 
-const EventModal = ({ event, ref }: EventModalProps) => {
+const EventModal = ({ event }: EventModalProps) => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
 
   const { formValues, onChange, onSubmit } = useForm({
@@ -63,8 +62,6 @@ const EventModal = ({ event, ref }: EventModalProps) => {
 
     handleOpenChange(false);
   };
-
-  if (!event) return null;
 
   return (
     <>

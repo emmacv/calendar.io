@@ -14,41 +14,41 @@ import { toast } from 'sonner';
 
 import { Toaster } from '@/components/ui/sonner';
 import useUiStore from '@/hooks/useUiStore';
+import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import type CalendarEvent from './calendar-event';
+import useCalendarStore from '../hooks/useCalendarStore';
+import type { CalendarEvent } from '../types/calendar';
+
 // Add this before the EventModal component
 export type EventModalRef = {
   open: () => void;
   close: () => void;
 };
 
-type EventModalProps = {
-  event?: CalendarEvent | null;
-};
-
 registerLocale('es', es);
 
-const EventModal = ({ event }: EventModalProps) => {
+const EventModal = () => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
+  const { startAddEvent, handleSelectEvent } = useCalendarStore();
+  // activeEvent is asyncrhonously updated, so a call for useEffect is needed
+  const { activeEvent: event } = useCalendarStore();
 
-  const { formValues, onChange, onSubmit } = useForm({
-    title: event?.title || '',
-    notes: event?.notes || '',
-    start: event?.start || new Date(),
-    end: event?.end || new Date(),
-  });
+  const { formValues, onChange, onSubmit, setInitialValues } =
+    useForm<CalendarEvent>();
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       handleOpenModal();
     } else {
       handleCloseModal();
+      handleSelectEvent(null);
     }
 
     //TODO: reset form values when closing the modal
   };
 
-  const handleSubmit = (event: typeof formValues) => {
+  const handleSubmit = async (event: typeof formValues) => {
+    if (!event) return;
     const areDatesValid = event.start < event.end;
 
     if (!areDatesValid) {
@@ -60,8 +60,29 @@ const EventModal = ({ event }: EventModalProps) => {
       return;
     }
 
+    // @ts-expect-error _id will be added in the store
+    await startAddEvent({
+      // event is not null here because of the formValues initialization
+      title: event!.title as string,
+      notes: event!.notes as string,
+      start: event!.start as Date,
+      end: event!.end as Date,
+    });
     handleOpenChange(false);
   };
+
+  useEffect(() => {
+    // @ts-expect-error _id will be added in the store
+    setInitialValues({
+      title: event ? event.title : '',
+      notes: event ? event.notes : '',
+      start: event ? new Date(event.start) : new Date(),
+      end: event
+        ? new Date(event.end)
+        : new Date(new Date().getTime() + 60 * 60 * 1000),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event?.title, event?.notes, event?.start, event?.end]);
 
   return (
     <>
@@ -75,7 +96,7 @@ const EventModal = ({ event }: EventModalProps) => {
             <div className="flex flex-col gap-1 mb-2">
               <label>Fecha y hora inicio</label>
               <DatePicker
-                selected={formValues.start}
+                selected={formValues?.start}
                 onChange={(e) => onChange('start', e)()}
                 className="form-control"
                 tabIndex={-1}
@@ -89,8 +110,8 @@ const EventModal = ({ event }: EventModalProps) => {
             <div className="flex flex-col gap-1 mb-2">
               <label>Fecha y hora fin</label>
               <DatePicker
-                minDate={formValues.start}
-                selected={formValues.end}
+                minDate={formValues?.start}
+                selected={formValues?.end}
                 onChange={(e) => onChange('end', e)()}
                 className="form-control"
                 tabIndex={-1}
@@ -111,7 +132,7 @@ const EventModal = ({ event }: EventModalProps) => {
                 name="title"
                 autoComplete="off"
                 onChange={onChange('title')}
-                value={formValues.title as string}
+                value={formValues?.title as string}
                 required
               />
 
@@ -125,7 +146,7 @@ const EventModal = ({ event }: EventModalProps) => {
                 rows={5}
                 name="notes"
                 onChange={onChange('notes')}
-                value={formValues.notes}
+                value={formValues?.notes}
               />
               <small id="emailHelp" className="font-rubik text-muted">
                 Información adicional

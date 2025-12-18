@@ -9,7 +9,7 @@ import type { View } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 export default function CalendarPage() {
-  const { handleSelectEvent, activeEvent: event } = useCalendarStore();
+  const { handleSelectEvent } = useCalendarStore();
   const { handleOpenModal } = useUiStore();
 
   const handleDoubleClickEvent = (event: CalendarEvent) => {
@@ -33,7 +33,7 @@ export default function CalendarPage() {
         handleSelectSlot={handleSelectSlot}
         handleChangeView={handleChangeView}
       />
-      <EventModal event={event} />
+      <EventModal />
       <FabAddEvent />
     </>
   );

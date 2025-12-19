@@ -28,8 +28,21 @@ const calendarSlice = createSlice({
     selectEvent(state, action) {
       state.activeEvent = action.payload;
     },
+    addEvent(state, action) {
+      state.events.push(action.payload);
+      state.activeEvent = null;
+    },
+    updateEvent(state, action) {
+      const currentEventIndex = state.events.findIndex(
+        (event) => event._id === action.payload._id
+      );
+
+      if (currentEventIndex !== -1) {
+        state.events[currentEventIndex] = action.payload;
+      }
+    },
   },
 });
 
-export const { selectEvent } = calendarSlice.actions;
+export const { selectEvent, addEvent, updateEvent } = calendarSlice.actions;
 export default calendarSlice.reducer;

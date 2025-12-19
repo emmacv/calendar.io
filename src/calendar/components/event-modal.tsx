@@ -31,7 +31,7 @@ const EventModal = () => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
   const { startAddEvent, handleSelectEvent } = useCalendarStore();
   // activeEvent is asyncrhonously updated, so a call for useEffect is needed
-  const { activeEvent: event } = useCalendarStore();
+  const { activeEvent } = useCalendarStore();
 
   const { formValues, onChange, onSubmit, setInitialValues } =
     useForm<CalendarEvent>();
@@ -60,29 +60,30 @@ const EventModal = () => {
       return;
     }
 
-    // @ts-expect-error _id will be added in the store
-    await startAddEvent({
-      // event is not null here because of the formValues initialization
-      title: event!.title as string,
-      notes: event!.notes as string,
-      start: event!.start as Date,
-      end: event!.end as Date,
-    });
+    const newEvent = { ...activeEvent, ...event };
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore_id will be added in the store
+    await startAddEvent(newEvent);
     handleOpenChange(false);
   };
 
   useEffect(() => {
-    // @ts-expect-error _id will be added in the store
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore _id will be added in the store
     setInitialValues({
-      title: event ? event.title : '',
-      notes: event ? event.notes : '',
-      start: event ? new Date(event.start) : new Date(),
-      end: event
-        ? new Date(event.end)
-        : new Date(new Date().getTime() + 60 * 60 * 1000),
+      title: activeEvent?.title ?? '',
+      notes: activeEvent?.notes ?? '',
+      start: activeEvent?.start ?? new Date(),
+      end: activeEvent?.end ?? new Date(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event?.title, event?.notes, event?.start, event?.end]);
+  }, [
+    activeEvent?.title,
+    activeEvent?.notes,
+    activeEvent?.start,
+    activeEvent?.end,
+  ]);
 
   return (
     <>

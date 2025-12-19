@@ -6,11 +6,24 @@ const useCalendarStore = () => {
   const dispatch = useDispatch();
   const calendarState = useSelector((state: RootState) => state.calendar);
 
-  const handleSelectEvent = (event: CalendarEvent) => {
+  const handleSelectEvent = (event: CalendarEvent | null) => {
     dispatch({ type: 'calendar/selectEvent', payload: event });
   };
 
-  return { ...calendarState, handleSelectEvent };
+  // TODO: Drop in favor of redux thunk
+  const startAddEvent = async (event: CalendarEvent) => {
+    const dispatchArg = event._id
+      ? { type: 'calendar/updateEvent', payload: event }
+      : {
+          type: 'calendar/addEvent',
+          // TODO: Replace with UUID generation
+          payload: { ...event, _id: new Date().getTime() },
+        };
+
+    dispatch(dispatchArg);
+  };
+
+  return { ...calendarState, handleSelectEvent, startAddEvent };
 };
 
 export default useCalendarStore;

@@ -6,7 +6,6 @@ import NavBar from '@/calendar/components/navbar';
 import useCalendarStore from '@/calendar/hooks/useCalendarStore';
 import type { CalendarEvent } from '@/calendar/types/calendar';
 import useUiStore from '@/hooks/useUiStore';
-import type { View } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 export default function CalendarPage() {
@@ -22,17 +21,12 @@ export default function CalendarPage() {
     console.log('Slot selected:', slotInfo);
   };
 
-  const handleChangeView = (view: View) => {
-    localStorage.setItem('lastView', view);
-  };
-
   return (
     <>
       <NavBar />
       <Calendar
         handleDoubleClickEvent={handleDoubleClickEvent}
         handleSelectSlot={handleSelectSlot}
-        handleChangeView={handleChangeView}
       />
       <EventModal />
       <>

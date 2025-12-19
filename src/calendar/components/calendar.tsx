@@ -1,6 +1,6 @@
 import localizer from '@/lib/localizer';
 import { useState } from 'react';
-import { type View, Calendar as MainCalendar } from 'react-big-calendar';
+import { type View, Calendar as MainCalendar, Views } from 'react-big-calendar';
 import useCalendarStore from '../hooks/useCalendarStore';
 import type { CalendarEvent as CalendarEventType } from '../types/calendar';
 import CalendarEvent from './calendar-event';
@@ -33,19 +33,21 @@ const eventPropsGetter = () => {
 type Props = {
   handleDoubleClickEvent: (event: CalendarEventType) => void;
   handleSelectSlot: (slotInfo: { start: Date; end: Date }) => void;
-  handleChangeView: (view: View) => void;
 };
 
-const Calendar = ({
-  handleDoubleClickEvent,
-  handleSelectSlot,
-  handleChangeView,
-}: Props) => {
+const Calendar = ({ handleDoubleClickEvent, handleSelectSlot }: Props) => {
   const [defaultView] = useState<View>(() => {
     const lastView = localStorage.getItem('lastView') as View;
-    return lastView || 'month';
+    return lastView || Views.MONTH;
   });
+  const [currentView, setCurrentView] = useState<View>(defaultView);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const { events, handleSelectEvent } = useCalendarStore();
+
+  const handleChangeView = (view: View) => {
+    setCurrentView(view);
+    localStorage.setItem('lastView', view);
+  };
 
   return (
     <MainCalendar
@@ -65,6 +67,9 @@ const Calendar = ({
       onDoubleClickEvent={handleDoubleClickEvent}
       onSelectSlot={handleSelectSlot}
       selectable
+      view={currentView}
+      onNavigate={setCurrentDate}
+      date={currentDate}
     />
   );
 };

@@ -41,6 +41,12 @@ const calendarSlice = createSlice({
         state.events[currentEventIndex] = action.payload;
       }
     },
+    deleteEvent(state) {
+      state.events = state.events.filter(
+        (event) => event._id !== state.activeEvent?._id
+      );
+      state.activeEvent = null;
+    },
   },
 });
 

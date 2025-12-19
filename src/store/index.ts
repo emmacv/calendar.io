@@ -7,8 +7,16 @@ export const store = configureStore({
     ui: uiReducer,
     calendar: calendarReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 type RootState = ReturnType<typeof store.getState>;
+
+store.subscribe(() => {
+  console.log('State updated:', store.getState());
+});
 
 export { uiReducer, type RootState };

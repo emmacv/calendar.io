@@ -43,7 +43,6 @@ const EventModal = () => {
       handleCloseModal();
       handleSelectEvent(null);
     }
-
     //TODO: reset form values when closing the modal
   };
 

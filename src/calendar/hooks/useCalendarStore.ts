@@ -23,7 +23,16 @@ const useCalendarStore = () => {
     dispatch(dispatchArg);
   };
 
-  return { ...calendarState, handleSelectEvent, startAddEvent };
+  const startDeleteEvent = () => {
+    dispatch({ type: 'calendar/deleteEvent' });
+  };
+
+  return {
+    ...calendarState,
+    handleSelectEvent,
+    startAddEvent,
+    startDeleteEvent,
+  };
 };
 
 export default useCalendarStore;

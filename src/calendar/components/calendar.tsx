@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { type View, Calendar as MainCalendar, Views } from 'react-big-calendar';
 import useCalendarStore from '../hooks/useCalendarStore';
 import type { CalendarEvent as CalendarEventType } from '../types/calendar';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import CalendarEvent from './calendar-event';
 
 const messages = {

@@ -30,7 +30,7 @@ registerLocale('es', es);
 const EventModal = () => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
   const { startAddEvent, handleSelectEvent } = useCalendarStore();
-  // activeEvent is asyncrhonously updated, so a call for useEffect is needed
+  // activeEvent is asynchronously updated, so a call for useEffect is needed
   const { activeEvent } = useCalendarStore();
 
   const { formValues, onChange, onSubmit, setInitialValues } =

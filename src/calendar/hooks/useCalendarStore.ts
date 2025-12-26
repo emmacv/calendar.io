@@ -4,7 +4,9 @@ import type { CalendarEvent } from '../types/calendar';
 
 const useCalendarStore = () => {
   const dispatch = useDispatch();
-  const calendarState = useSelector((state: RootState) => state.calendar);
+  const { activeEvent, events } = useSelector(
+    (state: RootState) => state.calendar
+  );
 
   const handleSelectEvent = (event: CalendarEvent | null) => {
     dispatch({ type: 'calendar/selectEvent', payload: event });
@@ -28,7 +30,12 @@ const useCalendarStore = () => {
   };
 
   return {
-    ...calendarState,
+    activeEvent,
+    events: events.map((event) => ({
+      ...event,
+      start: new Date(event.start),
+      end: new Date(event.end),
+    })),
     handleSelectEvent,
     startAddEvent,
     startDeleteEvent,

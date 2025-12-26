@@ -2,8 +2,8 @@ type CalendarEvent = {
   _id: number;
   title: string;
   notes?: string;
-  start: Date;
-  end: Date;
+  start: number;
+  end: number;
   bgColor?: string;
   user?: {
     _id: string;

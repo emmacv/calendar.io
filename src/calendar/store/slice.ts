@@ -6,8 +6,8 @@ const events = [
   {
     _id: new Date().getTime(),
     title: 'Cumpleaños de Ana',
-    start: new Date(),
-    end: addHours(new Date(), 5),
+    start: new Date().getTime(),
+    end: addHours(new Date(), 5).getTime(),
     bgColor: '#32404f',
     user: {
       name: 'John Doe',

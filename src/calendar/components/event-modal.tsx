@@ -73,8 +73,8 @@ const EventModal = () => {
     setInitialValues({
       title: activeEvent?.title ?? '',
       notes: activeEvent?.notes ?? '',
-      start: activeEvent?.start ?? new Date(),
-      end: activeEvent?.end ?? new Date(),
+      start: activeEvent?.start ?? new Date().getTime(),
+      end: activeEvent?.end ?? new Date().getTime(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -96,7 +96,7 @@ const EventModal = () => {
             <div className="flex flex-col gap-1 mb-2">
               <label>Fecha y hora inicio</label>
               <DatePicker
-                selected={formValues?.start}
+                selected={new Date(formValues?.start ?? new Date().getTime())}
                 onChange={(e) => onChange('start', e)()}
                 className="form-control"
                 tabIndex={-1}
@@ -110,8 +110,8 @@ const EventModal = () => {
             <div className="flex flex-col gap-1 mb-2">
               <label>Fecha y hora fin</label>
               <DatePicker
-                minDate={formValues?.start}
-                selected={formValues?.end}
+                minDate={new Date(formValues?.start ?? new Date().getTime())}
+                selected={new Date(formValues?.end ?? new Date().getTime())}
                 onChange={(e) => onChange('end', e)()}
                 className="form-control"
                 tabIndex={-1}

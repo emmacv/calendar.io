@@ -45,7 +45,6 @@ const Calendar = ({ handleDoubleClickEvent, handleSelectSlot }: Props) => {
   const [currentView, setCurrentView] = useState<View>(defaultView);
   const [currentDate, setCurrentDate] = useState(new Date());
   const { events, handleSelectEvent } = useCalendarStore();
-
   const handleChangeView = (view: View) => {
     setCurrentView(view);
     localStorage.setItem('lastView', view);

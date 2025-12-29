@@ -1,24 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addHours } from 'date-fns';
 import type { CalendarState } from '../types/calendar';
 
-const events = [
-  {
-    _id: new Date().getTime(),
-    title: 'Cumpleaños de Ana',
-    start: new Date().getTime(),
-    end: addHours(new Date(), 5).getTime(),
-    bgColor: '#32404f',
-    user: {
-      name: 'John Doe',
-      _id: '1',
-    },
-  },
-];
-
 const initialState: CalendarState = {
-  events,
+  events: [],
   activeEvent: null,
+  isLoading: true,
 };
 
 const calendarSlice = createSlice({
@@ -46,6 +32,10 @@ const calendarSlice = createSlice({
         (event) => event._id !== state.activeEvent?._id
       );
       state.activeEvent = null;
+    },
+    loadEvents(state, action) {
+      state.isLoading = false;
+      state.events = action.payload;
     },
   },
 });

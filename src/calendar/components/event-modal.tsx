@@ -73,8 +73,8 @@ const EventModal = () => {
     setInitialValues({
       title: activeEvent?.title ?? '',
       notes: activeEvent?.notes ?? '',
-      start: activeEvent?.start ?? new Date().getTime(),
-      end: activeEvent?.end ?? new Date().getTime(),
+      start: activeEvent?.start ?? new Date(),
+      end: activeEvent?.end ?? new Date(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

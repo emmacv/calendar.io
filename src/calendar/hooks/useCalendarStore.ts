@@ -1,12 +1,14 @@
 import type { RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 import type { CalendarEvent } from '../types/calendar';
+import useGetEvents from './useGetEvents';
 
 const useCalendarStore = () => {
   const dispatch = useDispatch();
   const { activeEvent, events } = useSelector(
     (state: RootState) => state.calendar
   );
+  const getEvents = useGetEvents();
 
   const handleSelectEvent = (event: CalendarEvent | null) => {
     dispatch({ type: 'calendar/selectEvent', payload: event });
@@ -29,6 +31,12 @@ const useCalendarStore = () => {
     dispatch({ type: 'calendar/deleteEvent' });
   };
 
+  const startLoadingEvents = async () => {
+    const events = await getEvents();
+
+    dispatch({ type: 'calendar/loadEvents', payload: events });
+  };
+
   return {
     activeEvent,
     events: events.map((event) => ({
@@ -39,6 +47,7 @@ const useCalendarStore = () => {
     handleSelectEvent,
     startAddEvent,
     startDeleteEvent,
+    startLoadingEvents,
   };
 };
 

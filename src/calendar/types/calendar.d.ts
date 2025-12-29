@@ -1,19 +1,16 @@
 type CalendarEvent = {
-  _id: number;
+  _id: string;
   title: string;
   notes?: string;
-  start: number;
-  end: number;
+  start: Date;
+  end: Date;
   bgColor?: string;
-  user?: {
-    _id: string;
-    name: string;
-  };
 };
 
 type CalendarState = {
   events: CalendarEvent[];
   activeEvent: CalendarEvent | null;
+  isLoading: boolean;
 };
 
 export type { CalendarEvent, CalendarState };

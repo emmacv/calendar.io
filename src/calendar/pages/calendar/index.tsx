@@ -5,15 +5,14 @@ import FabDeleteEvent from '@/calendar/components/fab-delete-event';
 import NavBar from '@/calendar/components/navbar';
 import useCalendarStore from '@/calendar/hooks/useCalendarStore';
 import type { CalendarEvent } from '@/calendar/types/calendar';
-import { useFirebase } from '@/hooks/useFirebase';
 import useUiStore from '@/hooks/useUiStore';
+import { useEffect } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 export default function CalendarPage() {
-  const { handleSelectEvent, activeEvent } = useCalendarStore();
+  const { handleSelectEvent, activeEvent, startLoadingEvents } =
+    useCalendarStore();
   const { handleOpenModal } = useUiStore();
-
-  const { db } = useFirebase();
 
   const handleDoubleClickEvent = (event: CalendarEvent) => {
     handleSelectEvent(event);
@@ -23,6 +22,11 @@ export default function CalendarPage() {
   const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
     console.log('Slot selected:', slotInfo);
   };
+
+  useEffect(() => {
+    startLoadingEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

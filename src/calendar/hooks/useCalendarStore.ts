@@ -16,15 +16,10 @@ const useCalendarStore = () => {
 
   // TODO: Drop in favor of redux thunk
   const startAddEvent = async (event: CalendarEvent) => {
-    const dispatchArg = event._id
-      ? { type: 'calendar/updateEvent', payload: event }
-      : {
-          type: 'calendar/addEvent',
-          // TODO: Replace with UUID generation
-          payload: { ...event, _id: new Date().getTime() },
-        };
-
-    dispatch(dispatchArg);
+    dispatch({
+      type: 'calendar/addEvent',
+      payload: { ...event },
+    });
   };
 
   const startDeleteEvent = () => {

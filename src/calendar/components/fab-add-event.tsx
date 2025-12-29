@@ -10,9 +10,10 @@ const FabAddEvent = (props: Props) => {
   return (
     <Button
       {...props}
-      className="fixed right-8 bottom-8 shadow-lg rounded-full! w-14 h-14"
+      className="fixed right-8 bottom-8 shadow-lg rounded-full! w-14 h-14 z-50"
       variant="outline"
       onClick={handleOpenModal}
+      id="fab-add-event"
     >
       <CrossIcon />
     </Button>

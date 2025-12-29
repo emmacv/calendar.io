@@ -12,11 +12,11 @@ import { Save } from 'lucide-react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { toast } from 'sonner';
 
-import { Toaster } from '@/components/ui/sonner';
 import useUiStore from '@/hooks/useUiStore';
 import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import useCalendarStore from '../hooks/useCalendarStore';
+import { useUpsertEvent } from '../hooks/useUpsertEvent';
 import type { CalendarEvent } from '../types/calendar';
 
 // Add this before the EventModal component
@@ -29,9 +29,10 @@ registerLocale('es', es);
 
 const EventModal = () => {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
-  const { startAddEvent, handleSelectEvent } = useCalendarStore();
+  const { handleSelectEvent } = useCalendarStore();
   // activeEvent is asynchronously updated, so a call for useEffect is needed
   const { activeEvent } = useCalendarStore();
+  const addEvent = useUpsertEvent();
 
   const { formValues, onChange, onSubmit, setInitialValues } =
     useForm<CalendarEvent>();
@@ -63,7 +64,11 @@ const EventModal = () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore_id will be added in the store
-    await startAddEvent(newEvent);
+    await addEvent(newEvent);
+    toast.success('Evento guardado', {
+      description: 'El evento se ha guardado correctamente.',
+      position: 'bottom-right',
+    });
     handleOpenChange(false);
   };
 
@@ -84,6 +89,8 @@ const EventModal = () => {
     activeEvent?.end,
   ]);
 
+  // TODO: implement form validation and show errors
+  // TODO: Implement color picker for event background color
   return (
     <>
       <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
@@ -138,6 +145,19 @@ const EventModal = () => {
 
               <small id="emailHelp">Una descripción corta</small>
             </div>
+            <button
+              onClick={() =>
+                toast('Event has been created', {
+                  description: 'Sunday, December 03, 2023 at 9:00 AM',
+                  action: {
+                    label: 'Undo',
+                    onClick: () => console.log('Undo'),
+                  },
+                })
+              }
+            >
+              click me
+            </button>
 
             <div>
               <textarea
@@ -164,7 +184,6 @@ const EventModal = () => {
           </form>
         </DialogContent>
       </Dialog>
-      <Toaster position="top-right" />
     </>
   );
 };

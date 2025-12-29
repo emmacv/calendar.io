@@ -28,7 +28,7 @@ export type EventModalRef = {
 registerLocale('es', es);
 
 const EventModal = () => {
-  const { isModalOpen, handleOpenModal, handleCloseModal } = useUiStore();
+  const { isModalOpen, mode, handleOpenModal, handleCloseModal } = useUiStore();
   const { handleSelectEvent } = useCalendarStore();
   // activeEvent is asynchronously updated, so a call for useEffect is needed
   const { activeEvent } = useCalendarStore();
@@ -39,7 +39,7 @@ const EventModal = () => {
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
-      handleOpenModal();
+      handleOpenModal(mode);
     } else {
       handleCloseModal();
       handleSelectEvent(null);

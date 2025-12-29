@@ -1,10 +1,14 @@
+import type { MODAL_MODE_TYPES } from '@/calendar/types/modal-mode';
 import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  isModalOpen: false,
+  mode: 'add' as MODAL_MODE_TYPES,
+};
 
 const uiSlice = createSlice({
   name: 'ui',
-  initialState: {
-    isModalOpen: false,
-  },
+  initialState,
   reducers: {
     openModal(state) {
       state.isModalOpen = true;

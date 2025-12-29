@@ -34,5 +34,7 @@ export const useUpsertEvent = () => {
     }
   };
 
+  const editEvent = async (event: CalendarEvent) => {};
+
   return addEvent;
 };

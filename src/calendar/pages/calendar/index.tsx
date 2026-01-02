@@ -4,10 +4,11 @@ import FabAddEvent from '@/calendar/components/fab-add-event';
 import FabDeleteEvent from '@/calendar/components/fab-delete-event';
 import NavBar from '@/calendar/components/navbar';
 import useCalendarStore from '@/calendar/hooks/useCalendarStore';
+import { MODAL_MODE_TYPES } from '@/calendar/types/modal-mode';
 import useUiStore from '@/hooks/useUiStore';
 import { useEffect } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { type CalendarEvent, MODAL_MODE_TYPES } from '../../types/calendar';
+import type { CalendarEvent } from '../../types/calendar';
 
 export default function CalendarPage() {
   const { handleSelectEvent, activeEvent, startLoadingEvents } =

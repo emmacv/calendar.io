@@ -29,6 +29,8 @@ const useCalendarStore = () => {
   const startLoadingEvents = async () => {
     const events = await getEvents();
 
+    console.log('Loaded events:', events);
+
     dispatch({ type: 'calendar/loadEvents', payload: events });
   };
 

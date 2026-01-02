@@ -13,9 +13,4 @@ type CalendarState = {
   isLoading: boolean;
 };
 
-enum MODAL_MODE_TYPES {
-  EDIT = 'edit',
-  ADD = 'add',
-}
-
-export type { CalendarEvent, CalendarState, MODAL_MODE_TYPES };
+export type { CalendarEvent, CalendarState };

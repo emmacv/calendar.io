@@ -1,17 +1,18 @@
+import type { FirebaseCalendarEvent } from '@/api/models/FirebaseCalendarEvent';
 import { useFirebase } from '@/hooks/useFirebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import type { CalendarEvent } from '../types/calendar';
 import useCalendarStore from './useCalendarStore';
 
 export const useUpsertEvent = () => {
   const { db } = useFirebase();
-  const { startAddEvent } = useCalendarStore();
+  const { startAddEvent, startUpdateEvent } = useCalendarStore();
+
+  const eventsCol = collection(db, 'events');
 
   // TODO: Check if there is a way to optimistic update the store using useOptimistic
   const addEvent = async (event: CalendarEvent) => {
     try {
-      const eventsCol = collection(db, 'events');
-
       const newEvent = {
         title: event.title,
         notes: event.notes,
@@ -30,11 +31,33 @@ export const useUpsertEvent = () => {
       return docRef;
     } catch (error) {
       console.error('Failed to add event to Firestore', error);
+
       throw error;
     }
   };
 
-  const editEvent = async (event: CalendarEvent) => {};
+  const updateEvent = async (event: CalendarEvent) => {
+    try {
+      const { _id, ...rest } = event;
+      const eventDoc = doc(db, 'events', _id);
 
-  return addEvent;
+      // TODO: wire actual user id from auth when available
+      const updatedEvent: FirebaseCalendarEvent = {
+        ...rest,
+        start: rest.start.getTime(),
+        end: rest.end.getTime(),
+      };
+
+      // Set the "capital" field of the city 'DC'
+      await updateDoc(eventDoc, updatedEvent);
+
+      startUpdateEvent(event);
+    } catch (error) {
+      console.error('Failed to update event in Firestore', error);
+
+      throw error;
+    }
+  };
+
+  return { addEvent, updateEvent };
 };

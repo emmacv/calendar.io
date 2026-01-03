@@ -10,8 +10,9 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    openModal(state) {
+    openModal(state, action) {
       state.isModalOpen = true;
+      state.mode = action.payload;
     },
     closeModal(state) {
       state.isModalOpen = false;

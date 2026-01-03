@@ -22,14 +22,16 @@ const useCalendarStore = () => {
     });
   };
 
+  const startUpdateEvent = async (event: CalendarEvent) => {
+    dispatch({ type: 'calendar/updateEvent', payload: event });
+  };
+
   const startDeleteEvent = () => {
     dispatch({ type: 'calendar/deleteEvent' });
   };
 
   const startLoadingEvents = async () => {
     const events = await getEvents();
-
-    console.log('Loaded events:', events);
 
     dispatch({ type: 'calendar/loadEvents', payload: events });
   };
@@ -44,6 +46,7 @@ const useCalendarStore = () => {
     handleSelectEvent,
     startAddEvent,
     startDeleteEvent,
+    startUpdateEvent,
     startLoadingEvents,
   };
 };

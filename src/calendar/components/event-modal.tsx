@@ -18,6 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import useCalendarStore from '../hooks/useCalendarStore';
 import { useUpsertEvent } from '../hooks/useUpsertEvent';
 import type { CalendarEvent } from '../types/calendar';
+import { MODAL_MODE_TYPES } from '../types/modal-mode';
 
 // Add this before the EventModal component
 export type EventModalRef = {
@@ -32,7 +33,7 @@ const EventModal = () => {
   const { handleSelectEvent } = useCalendarStore();
   // activeEvent is asynchronously updated, so a call for useEffect is needed
   const { activeEvent } = useCalendarStore();
-  const addEvent = useUpsertEvent();
+  const { addEvent, updateEvent } = useUpsertEvent();
 
   const { formValues, onChange, onSubmit, setInitialValues } =
     useForm<CalendarEvent>();
@@ -60,11 +61,14 @@ const EventModal = () => {
       return;
     }
 
-    const newEvent = { ...activeEvent, ...event };
+    switch (mode) {
+      case MODAL_MODE_TYPES.ADD:
+        await addEvent(event);
+        break;
+      case MODAL_MODE_TYPES.EDIT:
+        await updateEvent({ ...activeEvent, ...event });
+    }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore_id will be added in the store
-    await addEvent(newEvent);
     toast.success('Evento guardado', {
       description: 'El evento se ha guardado correctamente.',
       position: 'bottom-right',

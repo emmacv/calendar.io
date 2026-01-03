@@ -5,6 +5,7 @@ type CalendarEvent = {
   start: Date;
   end: Date;
   bgColor?: string;
+  userId: string;
 };
 
 type CalendarState = {

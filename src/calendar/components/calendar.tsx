@@ -1,6 +1,6 @@
 import localizer from '@/lib/localizer';
 import { useState } from 'react';
-import { type View, Calendar as MainCalendar, Views } from 'react-big-calendar';
+import { type View, Calendar as RBCalendar, Views } from 'react-big-calendar';
 import useCalendarStore from '../hooks/useCalendarStore';
 import type { CalendarEvent as CalendarEventType } from '../types/calendar';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -51,7 +51,7 @@ const Calendar = ({ handleDoubleClickEvent, handleSelectSlot }: Props) => {
   };
 
   return (
-    <MainCalendar
+    <RBCalendar
       localizer={localizer}
       startAccessor="start"
       endAccessor="end"

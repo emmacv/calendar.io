@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useForm = <T extends Record<string, unknown>>() => {
-  const [formValues, setFormValues] = useState<T>();
+const useForm = <T extends Record<string, unknown>>(initialValues?: T) => {
+  const [formValues, setFormValues] = useState<T>(initialValues ?? ({} as T));
 
   type FormValuesType = typeof formValues & {};
 

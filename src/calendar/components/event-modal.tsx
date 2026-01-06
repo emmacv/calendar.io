@@ -36,7 +36,14 @@ const EventModal = () => {
   const { addEvent, updateEvent } = useUpsertEvent();
 
   const { formValues, onChange, onSubmit, setInitialValues } =
-    useForm<CalendarEvent>();
+    useForm<CalendarEvent>({
+      title: '',
+      notes: '',
+      start: new Date(),
+      end: new Date(),
+      _id: '',
+      userId: '',
+    });
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
@@ -101,13 +108,15 @@ const EventModal = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore _id will be added in the store
+    if (mode === MODAL_MODE_TYPES.ADD) return;
+
     setInitialValues({
       title: activeEvent?.title ?? '',
       notes: activeEvent?.notes ?? '',
       start: activeEvent?.start ?? new Date(),
       end: activeEvent?.end ?? new Date(),
+      _id: activeEvent?._id ?? '',
+      userId: activeEvent?.userId ?? '',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -115,6 +124,7 @@ const EventModal = () => {
     activeEvent?.notes,
     activeEvent?.start,
     activeEvent?.end,
+    mode,
   ]);
 
   // TODO: implement form validation and show errors

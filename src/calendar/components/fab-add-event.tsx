@@ -9,12 +9,16 @@ type Props = React.ComponentProps<typeof Button>;
 const FabAddEvent = (props: Props) => {
   const { handleOpenModal } = useUiStore();
 
+  const onOpenModal = () => {
+    handleOpenModal(MODAL_MODE_TYPES.ADD);
+  };
+
   return (
     <Fab
       {...props}
       className="fixed right-8 bottom-8 shadow-lg rounded-full! w-14 h-14 z-50"
       variant="outline"
-      onClick={() => handleOpenModal(MODAL_MODE_TYPES.ADD)}
+      onClick={onOpenModal}
       id="fab-add-event"
       icon={CrossIcon}
     />

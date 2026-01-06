@@ -48,6 +48,40 @@ const EventModal = () => {
     //TODO: reset form values when closing the modal
   };
 
+  const updateOrAddEvent = async (
+    mode: MODAL_MODE_TYPES,
+    event: CalendarEvent
+  ) => {
+    type ToastArgs = Parameters<typeof toast.success>;
+    let toastArgs: ToastArgs | undefined;
+
+    switch (mode) {
+      case MODAL_MODE_TYPES.ADD:
+        await addEvent(event);
+        toastArgs = [
+          'Evento guardado',
+          {
+            description: 'El evento se ha guardado correctamente.',
+            position: 'bottom-right',
+          },
+        ];
+        break;
+      case MODAL_MODE_TYPES.EDIT:
+        await updateEvent({ ...activeEvent, ...event });
+        toastArgs = [
+          'Evento actualizado',
+          {
+            description: 'El evento se ha actualizado correctamente.',
+            position: 'bottom-right',
+          },
+        ];
+    }
+
+    if (toastArgs) {
+      toast.success(...toastArgs);
+    }
+  };
+
   const handleSubmit = async (event: typeof formValues) => {
     if (!event) return;
     const areDatesValid = event.start < event.end;
@@ -61,18 +95,8 @@ const EventModal = () => {
       return;
     }
 
-    switch (mode) {
-      case MODAL_MODE_TYPES.ADD:
-        await addEvent(event);
-        break;
-      case MODAL_MODE_TYPES.EDIT:
-        await updateEvent({ ...activeEvent, ...event });
-    }
+    await updateOrAddEvent(mode, event);
 
-    toast.success('Evento guardado', {
-      description: 'El evento se ha guardado correctamente.',
-      position: 'bottom-right',
-    });
     handleOpenChange(false);
   };
 

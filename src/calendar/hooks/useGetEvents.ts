@@ -1,13 +1,14 @@
 import type { FirebaseCalendarEvent } from '@/api/models/FirebaseCalendarEvent';
 import { useFirebase } from '@/hooks/useFirebase';
 import { collection, getDocs } from 'firebase/firestore';
-import type { CalendarEvent } from '../types/calendar';
+import { CALENDAR_EVENTS_COLLECTION } from '../constants/calendar';
+import type { CalendarEvent } from '../models/CalendarEvent';
 
 const useGetEvents = () => {
   const { db } = useFirebase();
 
   const getEvents = async (): Promise<CalendarEvent[]> => {
-    const eventsCol = collection(db, 'events');
+    const eventsCol = collection(db, CALENDAR_EVENTS_COLLECTION);
     const snapshot = await getDocs(eventsCol);
 
     const events: CalendarEvent[] = snapshot.docs.map((doc) => {

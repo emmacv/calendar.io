@@ -1,9 +1,10 @@
+import Fab from '@/components/fab';
 import { Button } from '@/components/ui/button';
 import { useFirebase } from '@/hooks/useFirebase';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { TrashIcon } from 'lucide-react';
 import { toast } from 'sonner';
-import { CALENDAR_EVENTS_COLLECTION } from '../const/calendar';
+import { CALENDAR_EVENTS_COLLECTION } from '../constants/calendar';
 import useCalendarStore from '../hooks/useCalendarStore';
 
 type Props = React.ComponentProps<typeof Button>;
@@ -28,14 +29,13 @@ const FabDeleteEvent = (props: Props) => {
   };
 
   return (
-    <Button
+    <Fab
       {...props}
       className="fixed left-8 bottom-8 shadow-lg rounded-full! w-14 h-14 bg-red-600 text-white hover:bg-red-700"
       variant="outline"
       onClick={handleDeleteEvent}
-    >
-      <TrashIcon />
-    </Button>
+      icon={TrashIcon}
+    />
   );
 };
 

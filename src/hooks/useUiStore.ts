@@ -1,4 +1,4 @@
-import type { MODAL_MODE_TYPES } from '@/calendar/types/modal-mode';
+import type { MODAL_MODE_TYPES } from '@/calendar/constants/modal-mode';
 import type { RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 

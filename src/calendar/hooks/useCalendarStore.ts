@@ -1,6 +1,6 @@
 import type { RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
-import type { CalendarEvent } from '../types/calendar';
+import type { CalendarEvent } from '../models/CalendarEvent';
 import useGetEvents from './useGetEvents';
 
 const useCalendarStore = () => {

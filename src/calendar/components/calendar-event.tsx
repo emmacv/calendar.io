@@ -1,5 +1,5 @@
 import type { EventProps } from 'react-big-calendar';
-import type { CalendarEvent } from '../types/calendar';
+import type { CalendarEvent } from '../models/CalendarEvent';
 
 const CalendarEvent = (props: EventProps<CalendarEvent>) => {
   return (

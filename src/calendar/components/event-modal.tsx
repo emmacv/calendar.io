@@ -15,10 +15,10 @@ import { toast } from 'sonner';
 import useUiStore from '@/hooks/useUiStore';
 import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { MODAL_MODE_TYPES } from '../constants/modal-mode';
 import useCalendarStore from '../hooks/useCalendarStore';
 import { useUpsertEvent } from '../hooks/useUpsertEvent';
-import type { CalendarEvent } from '../types/calendar';
-import { MODAL_MODE_TYPES } from '../types/modal-mode';
+import type { CalendarEvent } from '../models/CalendarEvent';
 
 // Add this before the EventModal component
 export type EventModalRef = {

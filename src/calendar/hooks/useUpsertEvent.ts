@@ -1,14 +1,15 @@
 import type { FirebaseCalendarEvent } from '@/api/models/FirebaseCalendarEvent';
 import { useFirebase } from '@/hooks/useFirebase';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import type { CalendarEvent } from '../types/calendar';
+import { CALENDAR_EVENTS_COLLECTION } from '../constants/calendar';
+import type { CalendarEvent } from '../models/CalendarEvent';
 import useCalendarStore from './useCalendarStore';
 
 export const useUpsertEvent = () => {
   const { db } = useFirebase();
   const { startAddEvent, startUpdateEvent } = useCalendarStore();
 
-  const eventsCol = collection(db, 'events');
+  const eventsCol = collection(db, CALENDAR_EVENTS_COLLECTION);
 
   // TODO: Check if there is a way to optimistic update the store using useOptimistic
   const addEvent = async (event: CalendarEvent) => {
@@ -39,7 +40,7 @@ export const useUpsertEvent = () => {
   const updateEvent = async (event: CalendarEvent) => {
     try {
       const { _id, ...rest } = event;
-      const eventDoc = doc(db, 'events', _id);
+      const eventDoc = doc(db, CALENDAR_EVENTS_COLLECTION, _id);
 
       // TODO: wire actual user id from auth when available
       const updatedEvent: FirebaseCalendarEvent = {

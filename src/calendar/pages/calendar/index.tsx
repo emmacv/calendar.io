@@ -1,4 +1,5 @@
 import Calendar from '@/calendar/components/calendar';
+import DeleteEventDialog from '@/calendar/components/delete-event-dialog';
 import EventModal from '@/calendar/components/event-modal';
 import FabAddEvent from '@/calendar/components/fab-add-event';
 import FabDeleteEvent from '@/calendar/components/fab-delete-event';
@@ -36,6 +37,7 @@ export default function CalendarPage() {
         handleSelectSlot={handleSelectSlot}
       />
       <EventModal />
+      <DeleteEventDialog />
       <>
         <FabAddEvent />
         {activeEvent && <FabDeleteEvent />}

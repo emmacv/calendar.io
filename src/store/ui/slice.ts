@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isModalOpen: false,
   mode: 'add' as MODAL_MODE_TYPES,
+  isAlertOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -16,6 +17,12 @@ const uiSlice = createSlice({
     },
     closeModal(state) {
       state.isModalOpen = false;
+    },
+    openAlert(state) {
+      state.isAlertOpen = true;
+    },
+    closeAlert(state) {
+      state.isAlertOpen = false;
     },
   },
 });

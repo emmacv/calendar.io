@@ -3,9 +3,7 @@ import type { RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useUiStore = () => {
-  const { isModalOpen, mode } = useSelector<RootState, RootState['ui']>(
-    (state) => state.ui
-  );
+  const uiState = useSelector<RootState, RootState['ui']>((state) => state.ui);
 
   const dispatch = useDispatch();
 
@@ -17,7 +15,21 @@ const useUiStore = () => {
     dispatch({ type: 'ui/closeModal' });
   };
 
-  return { isModalOpen, mode, handleOpenModal, handleCloseModal };
+  const handleOpenAlert = () => {
+    dispatch({ type: 'ui/openAlert' });
+  };
+
+  const handleCloseAlert = () => {
+    dispatch({ type: 'ui/closeAlert' });
+  };
+
+  return {
+    ...uiState,
+    handleOpenModal,
+    handleCloseModal,
+    handleOpenAlert,
+    handleCloseAlert,
+  };
 };
 
 export default useUiStore;

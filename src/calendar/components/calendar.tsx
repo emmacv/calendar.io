@@ -4,7 +4,7 @@ import { type View, Calendar as RBCalendar, Views } from 'react-big-calendar';
 import useCalendarStore from '../hooks/useCalendarStore';
 import type { CalendarEvent as CalendarEventType } from '../types/calendar';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// @ts-ignore CalendarEvent component is typed correctly
 import CalendarEvent from './calendar-event';
 
 const messages = {
@@ -23,21 +23,11 @@ const messages = {
   showMore: (total: number) => `+ Ver más (${total})`,
 };
 
-const eventPropsGetter = () => {
-  return {
-    className: 'bg-gray-800 text-white p-2 rounded-md',
-    style: {
-      height: '100%',
-    },
-  };
-};
-
 type Props = {
   handleDoubleClickEvent: (event: CalendarEventType) => void;
-  handleSelectSlot: (slotInfo: { start: Date; end: Date }) => void;
 };
 
-const Calendar = ({ handleDoubleClickEvent, handleSelectSlot }: Props) => {
+const Calendar = ({ handleDoubleClickEvent }: Props) => {
   const [defaultView] = useState<View>(() => {
     const lastView = localStorage.getItem('lastView') as View;
     return lastView || Views.MONTH;
@@ -59,14 +49,12 @@ const Calendar = ({ handleDoubleClickEvent, handleSelectSlot }: Props) => {
       style={{ height: '100vh' }}
       events={events}
       messages={messages}
-      eventPropGetter={eventPropsGetter}
       components={{
         event: CalendarEvent,
       }}
       onView={handleChangeView}
       onSelectEvent={handleSelectEvent}
       onDoubleClickEvent={handleDoubleClickEvent}
-      onSelectSlot={handleSelectSlot}
       selectable
       view={currentView}
       onNavigate={setCurrentDate}

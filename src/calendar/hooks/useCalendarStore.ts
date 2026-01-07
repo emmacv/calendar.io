@@ -42,7 +42,7 @@ const useCalendarStore = () => {
       ...event,
       start: new Date(event.start),
       end: new Date(event.end),
-    })),
+    })) as CalendarEvent[],
     handleSelectEvent,
     startAddEvent,
     startDeleteEvent,

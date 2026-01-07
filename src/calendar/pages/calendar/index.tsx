@@ -10,6 +10,7 @@ import useUiStore from '@/hooks/useUiStore';
 import { useEffect } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import type { CalendarEvent } from '../../models/CalendarEvent';
+
 export default function CalendarPage() {
   const { handleSelectEvent, activeEvent, startLoadingEvents } =
     useCalendarStore();
@@ -20,10 +21,6 @@ export default function CalendarPage() {
     handleOpenModal(MODAL_MODE_TYPES.EDIT);
   };
 
-  const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
-    console.log('Slot selected:', slotInfo);
-  };
-
   useEffect(() => {
     startLoadingEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,10 +29,7 @@ export default function CalendarPage() {
   return (
     <>
       <NavBar />
-      <Calendar
-        handleDoubleClickEvent={handleDoubleClickEvent}
-        handleSelectSlot={handleSelectSlot}
-      />
+      <Calendar handleDoubleClickEvent={handleDoubleClickEvent} />
       <EventModal />
       <DeleteEventDialog />
       <>

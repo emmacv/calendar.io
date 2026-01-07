@@ -1,6 +1,5 @@
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router';
-import './App';
 import { Toaster } from './components/ui/sonner';
 import FirebaseProvider from './context/firebase';
 import router from './routing';

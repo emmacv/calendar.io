@@ -1,4 +1,3 @@
-import { CalendarPage } from '@/calendar';
 import { createBrowserRouter } from 'react-router';
 import { Login, Register } from '../auth';
 import NotFound from '../pages/NotFound';
@@ -8,7 +7,7 @@ const router = createBrowserRouter([
     path: '/',
     // element: <RootLayout />,
     children: [
-      { index: true, element: <CalendarPage /> },
+      { index: true, element: <Login /> },
       // { path: 'calendar', element: <CalendarView /> },
       {
         path: 'auth',

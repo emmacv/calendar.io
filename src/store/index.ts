@@ -1,4 +1,5 @@
 import calendarReducer from '@/calendar/store/slice';
+import authReducer from '@/store/auth/slice';
 import { configureStore } from '@reduxjs/toolkit';
 import uiReducer from './ui/slice';
 
@@ -6,8 +7,9 @@ export const store = configureStore({
   reducer: {
     ui: uiReducer,
     calendar: calendarReducer,
+    auth: authReducer,
   },
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),

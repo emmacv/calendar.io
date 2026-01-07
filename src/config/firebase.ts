@@ -1,9 +1,4 @@
-// Import the functions you need from the SDKs you need
 import { type FirebaseOptions } from 'firebase/app';
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 export const firebaseConfig: FirebaseOptions = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

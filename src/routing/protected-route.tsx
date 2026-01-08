@@ -1,7 +1,17 @@
-const ProtectedRoute = ({ element }) => {
-  const isAuthenticated = true; // Replace with actual authentication logic
+import useAuth from '@/hooks/useAuth';
+import { Navigate } from 'react-router';
 
-  return <div>ProtectedRoute</div>;
+type ProtectedRouteProps = {
+  element: React.ReactNode;
+};
+
+const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
+  const { isLoggedIn } = useAuth();
+  console.log('ProtectedRoute: isLoggedIn =', isLoggedIn);
+
+  if (!isLoggedIn) return <Navigate to="/auth/login" replace />;
+
+  return element;
 };
 
 export default ProtectedRoute;

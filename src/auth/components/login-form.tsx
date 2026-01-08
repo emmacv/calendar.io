@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import useAuth from '@/hooks/useAuth';
 import { auth, provider } from '@/lib/firebase';
 import { Label } from '@radix-ui/react-label';
 import {
@@ -10,28 +11,39 @@ import {
 import { Chrome, Facebook } from 'lucide-react';
 
 const LoginForm = () => {
-  const authWithGoogle = () => {
-    signInWithPopup(auth(), provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        const additionalUserInfo = getAdditionalUserInfo(result);
+  const { logIn } = useAuth();
 
-        console.table({ user, additionalUserInfo, token });
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
+  const authWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth(), provider);
+
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      // const credential = GoogleAuthProvider.credentialFromResult(result);
+      // The signed-in user info.
+      const { user } = result;
+      // IdP data available using getAdditionalUserInfo(result)
+      const additionalUserInfo = getAdditionalUserInfo(result);
+
+      const userInfo = {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        emailVerified: user.emailVerified,
+        phoneNumber: user.phoneNumber,
+        isNewUser: additionalUserInfo?.isNewUser ?? false,
+      };
+
+      logIn(userInfo);
+    } catch (error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+    }
   };
 
   return (

@@ -6,6 +6,26 @@ on:
 jobs:
   first-job:
     runs-on: ubuntu-latest
+    outputs:
+      salida: ${{ steps.github_output_example.outputs.hola }}
     steps:
       - name: Checkout repository
         run: echo "running ${{ github.action }}"
+      - name: hola mundo example
+        id: github_output_example
+        run: echo "hola=Hola mundo" >> $GITHUB_OUTPUT
+
+  second-job:
+    needs: first-job
+    env:
+      SALIDA: salida es ${{ needs.first-job.outputs.salida }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: read from first-job outputs
+        run: echo "$SALIDA" >> status.log
+      - name: read from first-job outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: status
+          path: status.log
